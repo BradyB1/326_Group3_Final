@@ -1,4 +1,4 @@
-# Brady Buttrey, Matthew krivitskiy, Carlos Osorio, Luis Valderrama
+# Brady Buttrey, Matthew Krivitskiy, Carlos Osorio, Luis Valderrama
 # Professor Bill Farmer
 # INST 326: Final Project
 # 12/15/2022
