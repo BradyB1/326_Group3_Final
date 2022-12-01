@@ -31,6 +31,7 @@ Args:
 returns: userInput
 
     '''
+    specs = []
     UserCompany = input(
         "What company are you searching for? (if none say 'NA')")
 
@@ -48,24 +49,47 @@ returns: userInput
         "What Operating System are you looking for? (if none say 'NA')")
     UserWeight = input("What Weight are you looking for? (if none say 'NA')")
     UserPrice = input("What Price are you looking around? (if none say 'NA')")
+    #create array and append these to it 
 
+    
     print(f"Company desired: {UserCompany}")
-    print(f"Type: {UserTypeName}")
-    print(f"Inches: {UserInches}")
-    print(f"Screen Resolution: {UserResolution}")
-    print(f"Cpu: {UserCpu}")
-    print(f"Ram: {UserRam}")
-    print(f"Storage Memory: {UserMemory}")
-    print(f"Gpu: {UserGpu}")
-    print(f"Operating system: {UserOpSys}")
-    print(f"Laptop Weight: {UserWeight}")
-    print(f"Price Range: {UserPrice}")
+    if UserCompany != "NA" or 'na':
+        specs.append(UserCompany)
 
+    print(f"Type: {UserTypeName}")
+    specs.append(UserTypeName)
+    print(f"Inches: {UserInches}")
+    specs.append(UserInches)
+    print(f"Screen Resolution: {UserResolution}")
+    specs.append(UserResolution)
+    print(f"Cpu: {UserCpu}")
+    specs.append(UserCpu)
+    print(f"Ram: {UserRam}")
+    specs.append(UserRam)
+    print(f"Storage Memory: {UserMemory}")
+    specs.append(UserMemory)
+    print(f"Gpu: {UserGpu}")
+    specs.append(UserGpu)
+    print(f"Operating system: {UserOpSys}")
+    specs.append(UserOpSys)
+    print(f"Laptop Weight: {UserWeight}")
+    specs.append(UserWeight)
+    print(f"Price Range: {UserPrice}")
+    specs.append(UserPrice)
+
+    print(specs)
 
 # class TestBot(unittest.TestCase):
 
     # pass
 
+
+
+def option_UserDesires():
+
+    #for i in u
+    #we could do a loop to to run through what specs users want to specify and what they don't 
+    pass
 
 def main(filename, laptop_data):
     '''
@@ -252,6 +276,6 @@ def parse_args(args_list):
 
 
 if __name__ == "__main__":
-
-    args = parse_args(sys.argv[1:])
-    main(args.filename)
+    userDesires() 
+    #args = parse_args(sys.argv[1:])
+    #main(args.filename)
