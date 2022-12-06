@@ -6,6 +6,7 @@
 import sys
 import argparse
 import pandas as pd
+import re
 import unittest
 '''
 Using this software, users can input their desired laptop components and if two of more of the components match from an individual laptop, the laptop name information will be returned for the user.
@@ -36,26 +37,33 @@ returns: userInput
         "What company are you searching for? (if none say 'NA')")
 
     UserTypeName = input("What type are you looking for? (if none say 'NA')")
+
     UserInches = input(
         "How many Inches would you like the screen? (if none say 'NA')")
+
     UserResolution = input(
         "What Screen resolution are you looking for? (if none say 'NA')")
+
     UserCpu = input("What cpu are you looking for? (if none say 'NA')")
+
     UserRam = input("How much Ram are you looking for? (if none say 'NA')")
+
     UserMemory = input(
         "How much storage memory(please specify amount and type SSD, HDD, or flash storage )")
+
     UserGpu = input("What Gpu are you looking for? (if none say 'NA')")
+
     UserOpSys = input(
         "What Operating System are you looking for? (if none say 'NA')")
+
     UserWeight = input("What Weight are you looking for? (if none say 'NA')")
+
     UserPrice = input("What Price are you looking around? (if none say 'NA')")
-    #create array and append these to it 
+    # create array and append these to it
 
-    
     print(f"Company desired: {UserCompany}")
-    if UserCompany != "NA" or 'na':
-        specs.append(UserCompany)
-
+    # if UserCompany != "NA" or 'na':
+    #     specs.append(UserCompany)
     print(f"Type: {UserTypeName}")
     specs.append(UserTypeName)
     print(f"Inches: {UserInches}")
@@ -78,18 +86,12 @@ returns: userInput
     specs.append(UserPrice)
 
     print(specs)
+    return specs
 
 # class TestBot(unittest.TestCase):
 
     # pass
 
-
-
-def option_UserDesires():
-
-    #for i in u
-    #we could do a loop to to run through what specs users want to specify and what they don't 
-    pass
 
 def main(filename, laptop_data):
     '''
@@ -99,13 +101,21 @@ def main(filename, laptop_data):
     # df = pd.read_csv(filename)
     print(laptop_data)
 
+    # we can use this to check each component
+    for i in laptop_data:
+        pass
+
     userDesires()
 
 
-def parse_company():
+def parse_company(laptop_data):
     '''This function will parse the csv file to find matching company values 
 
     '''
+    for row in laptop_data:
+        if "Apple" in laptop_data:
+            print(row, "found")
+
     pass
 
 
@@ -253,6 +263,7 @@ def matches():
     returns: matching laptops
             "There are no matching laptops
     '''
+
     pass
 
 
@@ -276,6 +287,6 @@ def parse_args(args_list):
 
 
 if __name__ == "__main__":
-    userDesires() 
+    parse_company()
     #args = parse_args(sys.argv[1:])
-    #main(args.filename)
+    # main(args.filename)
