@@ -57,7 +57,7 @@ def SearchOption():
     elif searchBy == "specs" or "Specs":
         userDesires()
     elif searchBy == 'price' or "Price":
-        descending_price_display()
+        price_range()
 
 
 def descending_price_display(laptop_data):
@@ -93,7 +93,7 @@ def price_range():
     print(
         f"Searching for Laptops around {Price} dollars and diplaying Laptops within +-{dollar_range}")
 
-    return Price
+    return (Price, dollar_range)
 
 
 def price_option():
@@ -101,12 +101,15 @@ def price_option():
     display_choice = input(
         "Would you like it displayed in descending or , or ascending order? \nPlease only enter descending or ascending")
 
+    # need an if/else for invalid response
+
     return display_choice
 
 
 def price_display():
     '''This function displays the price output based on the users desire'''
     if price_option() in ["descending", "Descending"]:
+        price_matches()
         descending_price_display()  # call descending display function
     elif price_option() in ["ascending", "Ascending"]:
         ascending_price_display()  # call ascending display function
@@ -115,11 +118,26 @@ def price_display():
             "You must enter either 'descending', 'Descending', 'ascending', or 'Ascending'")
 
 
-def price_matches(laptop_data):
+def price_matches(laptop_data, price):
     '''This function will search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.'''
     PriceLaptops = []
     # ask Sai how to create the loop for this.
-    pass
+
+    filtered = laptop_data.loc[laptop_data["Price"] == price]
+    with open("PriceDisplay.txt", "w") as f:
+        if price == price_range:
+            f.rwite(filtered.to_csv())
+
+    # with open('laptop_data.txt', 'r') as f:
+    #     for row in laptop_data:
+    #         if row == row[11]:
+    #             if row[11] == price_range(row)[0]:
+    #                 price = row[11]
+    #                 addLaptops = Laptop(row[11])
+
+    #                 PriceLaptops.append(addLaptops)
+
+    #         return PriceLaptops
 
 
 class Laptop():
@@ -282,7 +300,6 @@ def matches(specs, laptop_data):
 
         # need to make sure Laptop objects are correctly created.
         # need to write the list of Laptop objects to a Txt file.
-        # Might want to find a way to include Laptop ID
 
     return output
 
