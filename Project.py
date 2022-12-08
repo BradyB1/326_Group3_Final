@@ -4,7 +4,7 @@
 # 12/15/2022
 
 # for ease of copy paste
-#UserCompany,UserTypeName,UserInches, UserResolution, UserCpu, UserRam, UserMemory, UserGpu, UserOpSys, UserWeight, UserPrice
+#UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, UserRam, UserMemory, UserGpu, UserOpSys, UserWeight, UserPrice
 
 import sys
 import argparse
@@ -17,8 +17,38 @@ Using this software, users can input their desired laptop components and if two 
 '''
 # NEED 1 class and 8 methods
 
+# order
+# 1: SearchOption()
+# 2:
+# if by specs -> UserDesires() -> PriceConversion-> Matches()
+# Matches needs to create list of matching laptop objects
+# after creating laptop objects -> write all objects in list to a txt file to make it easily readable
+# if by Price -> --New Function here-- -> PriceConversion -> Decending_Price_display()
+# i think we need a stand alone function to ask for price with this method of searching since they don't need the whole list of specs.
+
+# Two options:
+# 1 Price Order
+# low to high OR high to low
+# Price Range
+# if user inputs 1200
+# display everything +- $x
+
+# for this we need
+# def price_range: ask user price range (make it +- $x)
+# def price_option = low to high or high to low within price range. ----------- FIGURE OUT HOW TO CREATE THE PRICE RANGE WITH THE USERS PRICE
+# def price_option: asks the user how the want to have the laptops displayed
+# def price_display: function to display the way the user wants depending on input of price_option
+
+
+# def Price_Matches: function to search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.
+# Possibly combine these two into one function
+# def write_to_file: Write the matching Laptop Objects inside the list to a txt file. Likly using a loop to iterate through the list. for example. for i in objectList:
+
+# 3
+#
 
 def SearchOption():
+    '''This function will ask the user if they want to search by specs or price alone.'''
     searchBy = input(
         "Would you like to search by specs or by price? (Please enter 'specs' or 'price)\n")
 
@@ -27,7 +57,69 @@ def SearchOption():
     elif searchBy == "specs" or "Specs":
         userDesires()
     elif searchBy == 'price' or "Price":
-        decending_price_display()
+        descending_price_display()
+
+
+def descending_price_display(laptop_data):
+    '''This function works to display the prices in decending order (lowest -> highest)'''
+    laptop_data.sort_values(laptop_data.columns[11],
+                            axis=0,
+                            ascending=[False],
+                            inplace=True)
+
+    # displaying sorted data frame
+    print(laptop_data)
+
+
+def ascending_price_display(laptop_data):
+    '''This function works to display the prices in ASCENDING order (lowest -> highest)'''
+    laptop_data.sort_values(laptop_data.columns[11],
+                            axis=0,
+                            ascending=[True],
+                            inplace=True)
+
+    # displaying sorted data frame
+    print(laptop_data)
+
+
+def price_range():
+    '''This function will collect the users price and create a price range'''
+    # Need to figure out how to create that actual price range with a method
+    #
+    #
+    dollar_range = 200
+    dollar_amount = input("What price would you like to search around?")
+    Price = int(dollar_amount) / .0121
+    print(
+        f"Searching for Laptops around {Price} dollars and diplaying Laptops within +-{dollar_range}")
+
+    return Price
+
+
+def price_option():
+    '''This fuction with ask the upser how they want the laptops displayed (ascending or decending)'''
+    display_choice = input(
+        "Would you like it displayed in descending or , or ascending order? \nPlease only enter descending or ascending")
+
+    return display_choice
+
+
+def price_display():
+    '''This function displays the price output based on the users desire'''
+    if price_option() in ["descending", "Descending"]:
+        descending_price_display()  # call descending display function
+    elif price_option() in ["ascending", "Ascending"]:
+        ascending_price_display()  # call ascending display function
+    else:
+        raise ValueError(
+            "You must enter either 'descending', 'Descending', 'ascending', or 'Ascending'")
+
+
+def price_matches(laptop_data):
+    '''This function will search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.'''
+    PriceLaptops = []
+    # ask Sai how to create the loop for this.
+    pass
 
 
 class Laptop():
@@ -141,14 +233,6 @@ returns: userInput
     # Make this a Userdisplay method
 
 
-def price_conversion(dollarAmount, specs):
-    '''This method converts USD amount to INR amount. (the dataset contains INR prices)'''
-    UserPrice = int(dollarAmount) / .0121
-    print(
-        f"User price in dollars is: {dollarAmount}, user price in Ruppe is: {UserPrice}")
-    specs.append(UserPrice)
-
-
 def UserDisplay(UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, UserRam, UserMemory, UserGpu, UserOpSys, UserWeight, UserPrice):
     '''This will display what the user inputs '''
     print(f"Company desired: {UserCompany}")
@@ -179,15 +263,6 @@ def UserDisplay(UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, 
     # pass
 
 
-def main(filename, laptop_data):
-    '''
-    openes and reads into the laptop_data file 
-    '''
-    laptop_data = pd.read_csv(filename)
-    # df = pd.read_csv(filename)
-    print(laptop_data)
-
-
 def matches(specs, laptop_data):
     '''This function will check if at least two or more components are matching the users desires.
 
@@ -202,41 +277,28 @@ def matches(specs, laptop_data):
             if column in specs:
                 spec_count += 1
     if spec_count >= 2:
-        laptop = Laptop(row[1], row[2], row[3], row[4],
+        laptop = Laptop(row[0], row[1], row[2], row[3], row[4],
                         row[5], row[6], row[7], row[8], row[9], row[10], row[11])
-        # ^this is what we need to create laptop class for
-        # output.append(laptop)
 
-        # for row in df:
-        # for col in row:
-        # if value in specs:
-        # spec_count+=1
-        # if spec_count >= 2:
-        # laptop = Laptop(CompanyName... etc)
-        # ^get that from row
-        # output.append(laptop)
+        # need to make sure Laptop objects are correctly created.
+        # need to write the list of Laptop objects to a Txt file.
+        # Might want to find a way to include Laptop ID
 
-        # use info in row to create laptop obj
-
-        # return output
+    return output
 
 
 # CODE TO SHOW ASCENDING PRICES
 
-
-def decending_price_display(laptop_data):
-    '''This function works to display the prices in decending order (lowest -> highest)'''
-    laptop_data.sort_values(laptop_data.columns[11],
-                            axis=0,
-                            ascending=[False],
-                            inplace=True)
-
-    # displaying sorted data frame
+def main(filename, laptop_data):
+    '''
+    openes and reads into the laptop_data file 
+    '''
+    laptop_data = pd.read_csv(filename)
+    # df = pd.read_csv(filename)
     print(laptop_data)
 
 
 if __name__ == "__main__":
-    price_conversion()
     # userDesires()
     #args = parse_args(sys.argv[1:])
     # main(args.filename)
