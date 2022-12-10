@@ -82,7 +82,7 @@ def ascending_price_display(laptop_data):
     print(laptop_data)
 
 
-def price_range():
+def price_range(laptop_data):
     '''This function will collect the users price and create a price range'''
     # Need to figure out how to create that actual price range with a method
     #
@@ -90,10 +90,41 @@ def price_range():
     dollar_range = 200
     dollar_amount = input("What price would you like to search around?")
     Price = int(dollar_amount) / .0121
+
+    # Gonna try to-
+
+    # loop
+    # Make loop to find all matching prices
+    # Create laptop objects out of those matches
+    # append all objects to a list
+
+    # list vairable
+    # for loop through the csv file
+    # for every line check if the price in between your range
+    # add that line to list variable
+    # Return list variable
+
     print(
         f"Searching for Laptops around {Price} dollars and diplaying Laptops within +-{dollar_range}")
 
-    return (Price, dollar_range)
+    with open(laptop_data, 'r') as f:
+        price_laptops = []
+        for row in laptop_data:
+            for column in laptop_data:
+                if column in Price.between(Price - 100, Price - 200, include=True):
+                    object = Laptop(row[0], row[1], row[2], row[3], row[4],
+                                    row[5], row[6], row[7], row[8], row[9], row[10], row[11])
+                    price_laptops.append(object)
+
+        return price_laptops
+
+    # for row in laptop_data:
+    #     for column in row:
+    #         if column in specs:
+    #             spec_count += 1
+    # if spec_count >= 2:
+    #     laptop = Laptop(row[0], row[1], row[2], row[3], row[4],
+    #                     row[5], row[6], row[7], row[8], row[9], row[10], row[11])
 
 
 def price_option():
@@ -120,16 +151,16 @@ def price_display():
 
 def price_matches(laptop_data, price):
     '''This function will search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.'''
-    PriceLaptops = []
+
     # ask Sai how to create the loop for this.
 
-    filtered = laptop_data.loc[laptop_data["Price"] == price]
     with open("PriceDisplay.txt", "w") as f:
-        if price == price_range:
-            f.rwite(filtered.to_csv())
+
+        # need to figure out how to write it with the acsending/decsending functions being used. Or we could rewrite them here somehow.
+        f.write(price_range())
 
     # with open('laptop_data.txt', 'r') as f:
-    #     for row in laptop_data:
+    #     for row ifn laptop_data:
     #         if row == row[11]:
     #             if row[11] == price_range(row)[0]:
     #                 price = row[11]
