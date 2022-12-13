@@ -44,8 +44,6 @@ Using this software, users can input their desired laptop components and if two 
 # Possibly combine these two into one function
 # def write_to_file: Write the matching Laptop Objects inside the list to a txt file. Likly using a loop to iterate through the list. for example. for i in objectList:
 
-# 3
-#
 
 def SearchOption():
     '''This function will ask the user if they want to search by specs or price alone.'''
@@ -111,7 +109,7 @@ def price_range(laptop_data):
         price_laptops = []
         for row in laptop_data:
             for column in laptop_data:
-                if column in Price.between(Price - 100, Price - 200, include=True):
+                if column in Price.between(Price - 200, Price + 200, include=True):
                     object = Laptop(row[0], row[1], row[2], row[3], row[4],
                                     row[5], row[6], row[7], row[8], row[9], row[10], row[11])
                     price_laptops.append(object)
@@ -132,21 +130,25 @@ def price_option():
     display_choice = input(
         "Would you like it displayed in descending or , or ascending order? \nPlease only enter descending or ascending")
 
-    # need an if/else for invalid response
+    if display_choice not in ["descending", "Descending", "ascending", "Ascending"]:
+        raise ValueError(
+            "You must enter either 'descending', 'Descending', 'ascending', or 'Ascending'. Please restart and try again")
 
     return display_choice
 
 
 def price_display():
     '''This function displays the price output based on the users desire'''
-    if price_option() in ["descending", "Descending"]:
-        price_matches()
-        descending_price_display()  # call descending display function
-    elif price_option() in ["ascending", "Ascending"]:
-        ascending_price_display()  # call ascending display function
-    else:
-        raise ValueError(
-            "You must enter either 'descending', 'Descending', 'ascending', or 'Ascending'")
+
+    with open("PriceDisplay.txt", "w") as f:
+
+        if price_option() in ["descending", "Descending"]:
+            # write with descending display function
+            f.write(price_range(descending_price_display()))
+            # f.write(descending_price_display(price_range))
+        elif price_option() in ["ascending", "Ascending"]:
+            # write with ascending display function
+            f.write(price_range(ascending_price_display()))
 
 
 def price_matches(laptop_data, price):
@@ -159,6 +161,7 @@ def price_matches(laptop_data, price):
         # need to figure out how to write it with the acsending/decsending functions being used. Or we could rewrite them here somehow.
         f.write(price_range())
 
+        price_range(ascending_price_display)
     # with open('laptop_data.txt', 'r') as f:
     #     for row ifn laptop_data:
     #         if row == row[11]:
@@ -237,16 +240,9 @@ returns: userInput
 
     dollarAmount = input(
         "What Price are you looking around? (if none say 'NA')")
-    # make this its own conversion function
-    # add budget/price range instead of hard price
-    # display it from high to low
-    # conversion from USD to INR
-
-    # create array and append these to it
 
     # Series of if/else statements to check if the value is equal to something other then NA.
-    # if NA pop it off the list
-    # else append it to the list
+
     if UserCompany not in ["NA", "na", 'None', 'none']:
         specs.append(UserCompany)
 
@@ -307,11 +303,6 @@ def UserDisplay(UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, 
     print(f"Price Range: {UserPrice}")
 
 
-# class TestBot(unittest.TestCase):
-
-    # pass
-
-
 def matches(specs, laptop_data):
     '''This function will check if at least two or more components are matching the users desires.
 
@@ -335,7 +326,9 @@ def matches(specs, laptop_data):
     return output
 
 
-# CODE TO SHOW ASCENDING PRICES
+def parse_args(args_list):
+    pass
+
 
 def main(filename, laptop_data):
     '''
@@ -350,3 +343,4 @@ if __name__ == "__main__":
     # userDesires()
     #args = parse_args(sys.argv[1:])
     # main(args.filename)
+    pass
