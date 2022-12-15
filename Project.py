@@ -13,7 +13,6 @@ import unittest
 Using this software, users can input their desired laptop components and if two of more of the components match from an individual laptop, the laptop ID# along with the matching specs will be returned for the user.
 
 '''
-# NEED 1 class and 8 methods
 
 
 def SearchOption():  # Matthew
@@ -37,8 +36,6 @@ def SearchOption():  # Matthew
         raise ValueError("You must enter a valid response")
     return searchBy
 
-# did test
-
 
 def price_display(laptop_data, order):  # Carlos
     '''this method checks the users display desire and sorts the objects in ascending or descending
@@ -57,9 +54,6 @@ def price_display(laptop_data, order):  # Carlos
     x = sorted(laptop_data, key=lambda x: x.price, reverse=reverse)
 
     return x
-
-
-# Done
 
 
 def get_price_range():  # Matthews
@@ -84,7 +78,6 @@ def get_price_range():  # Matthews
     return Price
 
 
-# need test
 def price_loop(laptop_data, Price):  # Brady
     '''This method find all the laptops within the given price range, creates objects of those laptops, and appends them to a list.
 
@@ -157,7 +150,6 @@ class Laptop():  # Brady
 
     '''
 
-    # test needed
     def __init__(self, id, company, typeName, inches, resolution, cpu, ram, memory, gpu, opSys, weight, price):  # Brady
         '''initializes a Laptop object
 
@@ -311,7 +303,6 @@ returns:
     return specs
 
 
-# needs test
 def specs_filter(specs, laptop_data):  # Brady
     '''This function will check if at least two or more components are matching the users desires, create Laptop objects, and append them to a list.
 
