@@ -3,8 +3,6 @@
 # INST 326: Final Project
 # 12/15/2022
 
-# for ease of copy paste
-#UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, UserRam, UserMemory, UserGpu, UserOpSys, UserWeight, UserPrice
 
 import sys
 import argparse
@@ -17,167 +15,168 @@ Using this software, users can input their desired laptop components and if two 
 '''
 # NEED 1 class and 8 methods
 
-# order
-# 1: SearchOption()
-# 2:
-# if by specs -> UserDesires() -> PriceConversion-> Matches()
-# Matches needs to create list of matching laptop objects
-# after creating laptop objects -> write all objects in list to a txt file to make it easily readable
-# if by Price -> --New Function here-- -> PriceConversion -> Decending_Price_display()
-# i think we need a stand alone function to ask for price with this method of searching since they don't need the whole list of specs.
 
-# Two options:
-# 1 Price Order
-# low to high OR high to low
-# Price Range
-# if user inputs 1200
-# display everything +- $x
+def SearchOption():  # Matthew
+    '''This function will ask the user if they want to search by specs or price alone.
 
-# for this we need
-# def price_range: ask user price range (make it +- $x)
-# def price_option = low to high or high to low within price range. ----------- FIGURE OUT HOW TO CREATE THE PRICE RANGE WITH THE USERS PRICE
-# def price_option: asks the user how the want to have the laptops displayed
-# def price_display: function to display the way the user wants depending on input of price_option
+    args:
+        searchBy(str): The user will input how they want to search (by specs or price)
 
+    returns:
+        searchBy(str): The users input of how they want to search
 
-# def Price_Matches: function to search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.
-# Possibly combine these two into one function
-# def write_to_file: Write the matching Laptop Objects inside the list to a txt file. Likly using a loop to iterate through the list. for example. for i in objectList:
+    '''
 
-
-def SearchOption():
-    '''This function will ask the user if they want to search by specs or price alone.'''
+    # asks the user how the want to search for a laptop
     searchBy = input(
         "Would you like to search by specs or by price? (Please enter 'specs' or 'price)\n")
 
+    # ensures that a valid response what inputted
     if searchBy not in ["Specs", "specs", "Price", "price"]:
+        # if not, it raises a ValueError
         raise ValueError("You must enter a valid response")
-    elif searchBy == "specs" or "Specs":
-        userDesires()
-    elif searchBy == 'price' or "Price":
-        price_range()
+    return searchBy
+
+# did test
 
 
-def descending_price_display(laptop_data):
-    '''This function works to display the prices in decending order (lowest -> highest)'''
-    laptop_data.sort_values(laptop_data.columns[11],
-                            axis=0,
-                            ascending=[False],
-                            inplace=True)
+def price_display(laptop_data, order):  # Carlos
+    '''this method checks the users display desire and sorts the objects in ascending or descending
 
-    # displaying sorted data frame
-    print(laptop_data)
+    args:
+        reverse(bool): remains False if the user wants to display in ascending order, turns True if the user picks descending
+        x: The sorted laptop data
 
+    returns:
+        x    
+    '''
+    reverse = False
+    if order in ["d", "D"]:
+        reverse = True
 
-def ascending_price_display(laptop_data):
-    '''This function works to display the prices in ASCENDING order (lowest -> highest)'''
-    laptop_data.sort_values(laptop_data.columns[11],
-                            axis=0,
-                            ascending=[True],
-                            inplace=True)
+    x = sorted(laptop_data, key=lambda x: x.price, reverse=reverse)
 
-    # displaying sorted data frame
-    print(laptop_data)
+    return x
 
 
-def price_range(laptop_data):
-    '''This function will collect the users price and create a price range'''
-    # Need to figure out how to create that actual price range with a method
-    #
-    #
+# Done
+
+
+def get_price_range():  # Matthews
+    '''This function will collect the users price and convert it to INR currency
+
+    args:
+        dollar_range(int): sets the default range of the price 
+        dollar_amount(str): takes the users price as a string
+        Price(float): runs the conversion on dollar_amount to change from USD to INR
+
+    returns:
+        Price(float): the converted dollar_amount the user wants to search for. 
+
+    '''
+
     dollar_range = 200
-    dollar_amount = input("What price would you like to search around?")
-    Price = int(dollar_amount) / .0121
-
-    # Gonna try to-
-
-    # loop
-    # Make loop to find all matching prices
-    # Create laptop objects out of those matches
-    # append all objects to a list
-
-    # list vairable
-    # for loop through the csv file
-    # for every line check if the price in between your range
-    # add that line to list variable
-    # Return list variable
+    dollar_amount = input("What price would you like to search around?: ")
+    Price = float(dollar_amount) / .0121
 
     print(
         f"Searching for Laptops around {Price} dollars and diplaying Laptops within +-{dollar_range}")
-
-    with open(laptop_data, 'r') as f:
-        price_laptops = []
-        for row in laptop_data:
-            for column in laptop_data:
-                if column in Price.between(Price - 200, Price + 200, include=True):
-                    object = Laptop(row[0], row[1], row[2], row[3], row[4],
-                                    row[5], row[6], row[7], row[8], row[9], row[10], row[11])
-                    price_laptops.append(object)
-
-        return price_laptops
-
-    # for row in laptop_data:
-    #     for column in row:
-    #         if column in specs:
-    #             spec_count += 1
-    # if spec_count >= 2:
-    #     laptop = Laptop(row[0], row[1], row[2], row[3], row[4],
-    #                     row[5], row[6], row[7], row[8], row[9], row[10], row[11])
+    return Price
 
 
-def price_option():
-    '''This fuction with ask the upser how they want the laptops displayed (ascending or decending)'''
+# need test
+def price_loop(laptop_data, Price):  # Brady
+    '''This method find all the laptops within the given price range, creates objects of those laptops, and appends them to a list.
+
+    args: 
+        price_laptops(list): the list to hold all Laptop objects
+        object(Obj): Laptop objects created
+
+
+    '''
+    price_laptops = []
+    for row in laptop_data.iterrows():
+        # .between(Price - 200, Price + 200, include=True):
+        if row[1]["Price"] > Price - 200 and row[1]["Price"] < Price + 200:
+            object = Laptop(row[1]["ID"], row[1]["Company"], row[1]["TypeName"], row[1]["Inches"], row[1]["ScreenResolution"], row[1]["Cpu"],
+                            row[1]["Ram"], row[1]["Memory"], row[1]["Gpu"], row[1]["OpSys"], row[1]["Weight"], row[1]["Price"])
+            price_laptops.append(object)
+
+    return price_laptops
+
+
+def price_option():  # carlos
+    '''This fuction with ask the user how they want the laptops displayed (ascending or decending)
+
+    display_choice(str): Takes the users input on what order they want the laptops displayed
+
+    Raises:
+        ValueError: if user input is not within the list of answers 
+
+    returns:
+        Display choice(str): takes the users input on what order they want the laptops displayed 
+
+    '''
     display_choice = input(
-        "Would you like it displayed in descending or , or ascending order? \nPlease only enter descending or ascending")
+        "Would you like it displayed in descending or , or ascending order? \nPlease only enter 'd' for descending or 'a' for ascending: ")
 
-    if display_choice not in ["descending", "Descending", "ascending", "Ascending"]:
+    # if choice is not within the list of correct answers
+    if display_choice not in ["d", "D", "a", "A"]:
+        # raise an error
         raise ValueError(
-            "You must enter either 'descending', 'Descending', 'ascending', or 'Ascending'. Please restart and try again")
-
+            "You must enter either 'd', 'D', 'a', or 'A'. Please restart and try again")
     return display_choice
 
 
-def price_display():
-    '''This function displays the price output based on the users desire'''
+def write_to_file(laptop_data):  # luis
+    '''this method writes the laptop objects to the sorted.txt file
 
-    with open("PriceDisplay.txt", "w") as f:
-
-        if price_option() in ["descending", "Descending"]:
-            # write with descending display function
-            f.write(price_range(descending_price_display()))
-            # f.write(descending_price_display(price_range))
-        elif price_option() in ["ascending", "Ascending"]:
-            # write with ascending display function
-            f.write(price_range(ascending_price_display()))
+    '''
+    with open("sorted.txt", "w") as f:
+        for i in laptop_data:
+            f.write("ID:" + str(i.id) + " " + i.company + " " + i.typeName + " " + str(i.inches) + " " + i.resolution + " " + i.cpu + " " +
+                    i.ram + " " + i.memory + " " + i.gpu + " " + i.opSys + " " + i.weight + " " + str(i.price) + "\n")
 
 
-def price_matches(laptop_data, price):
-    '''This function will search for all matching laptops within the given price range. Also make those Laptops an object and append them to a list.'''
+class Laptop():  # Brady
+    '''this class will be the laptop objects created from matching laptops
 
-    # ask Sai how to create the loop for this.
+    attributes:
+        id(int): the laptop id
+        company(str): the laptop company 
+        typeName(str): the type of laptop
+        inches(int): the inches of the laptop 
+        resolution(str): the resolution of the laptop
+        cpu(str): the cpu of the laptop 
+        ram(str): the ram of the laptop
+        memory(str): the amount of memory in the laptop
+        gpu(Str): the gpu of the laptop
+        opSys(str): the operating system of the laptop 
+        weight(str): the weight of the laptop
+        price(str): the price of the laptop
 
-    with open("PriceDisplay.txt", "w") as f:
+    '''
 
-        # need to figure out how to write it with the acsending/decsending functions being used. Or we could rewrite them here somehow.
-        f.write(price_range())
+    # test needed
+    def __init__(self, id, company, typeName, inches, resolution, cpu, ram, memory, gpu, opSys, weight, price):  # Brady
+        '''initializes a Laptop object
 
-        price_range(ascending_price_display)
-    # with open('laptop_data.txt', 'r') as f:
-    #     for row ifn laptop_data:
-    #         if row == row[11]:
-    #             if row[11] == price_range(row)[0]:
-    #                 price = row[11]
-    #                 addLaptops = Laptop(row[11])
+        attributes:
+        id(int): the laptop id
+        company(str): the laptop company 
+        typeName(str): the type of laptop
+        inches(int): the inches of the laptop 
+        resolution(str): the resolution of the laptop
+        cpu(str): the cpu of the laptop 
+        ram(str): the ram of the laptop
+        memory(str): the amount of memory in the laptop
+        gpu(Str): the gpu of the laptop
+        opSys(str): the operating system of the laptop 
+        weight(str): the weight of the laptop
+        price(str): the price of the laptop
 
-    #                 PriceLaptops.append(addLaptops)
-
-    #         return PriceLaptops
-
-
-class Laptop():
-    '''this class will be the laptop objects created from matching laptops'''
-
-    def __init__(self, company, typeName, inches, resolution, cpu, ram, memory, gpu, opSys, weight, price):
+        '''
+        self.id = id
         self.company = company
         self.typeName = typeName
         self.inches = inches
@@ -191,8 +190,8 @@ class Laptop():
         self.price = price
 
 
-def userDesires():
-    '''This function will take the user desire/inputed components
+def userDesires(laptop_data):  # Carlos
+    '''This function will take the user desire/inputed components and make them key value pairs.
 Args:
     UserCompany(str): users desired company
     UserTypeName (str): users desired laptop type
@@ -206,141 +205,168 @@ Args:
     UserWeight(str): Users desired laptop weight
     Userprice(str): Users desired price
 
-returns: userInput
+    specs(dictionary): key value pairs of components
+
+returns: 
+    specs(dictionary): a key value pairs of components 
 
     '''
 
-    # This list will hold the values of the user input
-    specs = []
+    # empty dictionary to be added to
+    specs = {}
 
+    # takes the company input from the user
     UserCompany = input(
-        "What company are you searching for? (if none say 'NA')")
-
-    UserTypeName = input("What type are you looking for? (if none say 'NA')")
-
-    UserInches = input(
-        "How many Inches would you like the screen? (if none say 'NA')")
-
-    UserResolution = input(
-        "What Screen resolution are you looking for? (if none say 'NA')")
-
-    UserCpu = input("What cpu are you looking for? (if none say 'NA')")
-
-    UserRam = input("How much Ram are you looking for? (if none say 'NA')")
-
-    UserMemory = input(
-        "How much storage memory(please specify amount and type SSD, HDD, or flash storage )")
-
-    UserGpu = input("What Gpu are you looking for? (if none say 'NA')")
-
-    UserOpSys = input(
-        "What Operating System are you looking for? (if none say 'NA')")
-
-    UserWeight = input("What Weight are you looking for? (if none say 'NA')")
-
-    dollarAmount = input(
-        "What Price are you looking around? (if none say 'NA')")
-
-    # Series of if/else statements to check if the value is equal to something other then NA.
-
+        "What company are you searching for? (if none say 'NA'): ")
+    # checks if the company is an actual value or if user puts na
     if UserCompany not in ["NA", "na", 'None', 'none']:
-        specs.append(UserCompany)
+        # creates a key value pair in specs if its an actual company
+        specs["Company"] = UserCompany
 
+    # takes the Type of laptop from the users input
+    UserTypeName = input("What type are you looking for? (if none say 'NA'): ")
+
+    # checks if the type is a an actual type, if not ignore it
     if UserTypeName not in ["NA", "na", 'None', 'none']:
-        specs.append(UserTypeName)
+        # creates key value pair in specs if its an actual type
+        specs["TypeName"] = UserTypeName
 
+    # takes the desired inches from the users input
+    UserInches = input(
+        "How many Inches would you like the screen? (if none say 'NA'): ")
+
+    # checks if the inches is a an actual input, if not ignore it
     if UserInches not in ["NA", "na", 'None', 'none']:
-        specs.append(UserInches)
+        # creates a key value pair in specs if its an actual input
+        specs["Inches"] = UserInches
 
+    # takes the desired resolution from the users input
+    UserResolution = input(
+        "What Screen resolution are you looking for? (if none say 'NA'): ")
+    # checks if the resolution is a an actual input, if not ignore it
     if UserResolution not in ["NA", "na", 'None', 'none']:
-        specs.append(UserResolution)
+        # creates a key value pair in specs if its an actual input
+        specs["Resolution"] = UserResolution
 
+    # takes the desired Cpu from the users input
+    UserCpu = input("What cpu are you looking for? (if none say 'NA'): ")
+
+    # checks if the cpu is a an actual input, if not ignore it
     if UserCpu not in ["NA", "na", 'None', 'none']:
-        specs.append(UserCpu)
+        # creates a key value pair in specs if its an actual input
+        specs["Cpu"] = UserCpu
 
+    # takes the desired Ram from the users input
+    UserRam = input("How much Ram are you looking for? (if none say 'NA'): ")
+
+    # checks if the ram is a an actual input, if not ignore it
     if UserRam not in ["NA", "na", 'None', 'none']:
-        specs.append(UserRam)
+        # creates a key value pair in specs if its an actual input
+        specs["Ram"] = UserRam
 
+    # takes the desired Memory from the users input
+    UserMemory = input(
+        "How much storage memory(please specify amount and type SSD, HDD, or flash storage): ")
+
+    # checks if the memory is a an actual input, if not ignore it
     if UserMemory not in ["NA", "na", 'None', 'none']:
-        specs.append(UserMemory)
+        # creates a key value pair in specs if its an actual input
+        specs["Memory"] = UserMemory
 
+    # takes the desired Gpu from the users input
+    UserGpu = input("What Gpu are you looking for? (if none say 'NA'): ")
+
+    # checks if the gpu is a an actual input, if not ignore it
     if UserGpu not in ["NA", "na", 'None', 'none']:
-        specs.append(UserGpu)
+        # creates a key value pair in specs if its an actual input
+        specs["Gpu"] = UserGpu
 
+    # takes the desired Operating system from the users input
+    UserOpSys = input(
+        "What Operating System are you looking for? (if none say 'NA'): ")
+
+    # checks if the operating system is a an actual input, if not ignore it
     if UserOpSys not in ["NA", "na", 'None', 'none']:
-        specs.append(UserOpSys)
+        # creates a key value pair in specs if its an actual input
+        specs["OpSys"] = UserOpSys
 
+    # takes the desired laptop weight from the users input
+    UserWeight = input("What Weight are you looking for? (if none say 'NA'): ")
+
+    # checks if the weight is a an actual input, if not ignore it
     if UserWeight not in ["NA", "na", 'None', 'none']:
-        specs.append(UserWeight)
+        # creates a key value pair in specs if its an actual input
+        specs["Weight"] = UserWeight
+
+    # takes the desired laptop price from the users input
+    myPrice = input(
+        "What Price are you looking around? (if none say 'NA'): ")
+    # checks if price is an actual input and not na
+    if myPrice not in ["NA", "na", 'None', 'none']:
+        # converts the price from USD to INR (what it is in the df)
+        UserPrice = float(myPrice) / .0121
+        # creates a key value pair in specs
+        specs["Price"] = UserPrice
 
     return specs
 
-    # Make this a Userdisplay method
+
+# needs test
+def specs_filter(specs, laptop_data):  # Brady
+    '''This function will check if at least two or more components are matching the users desires, create Laptop objects, and append them to a list.
+
+    args:
+        specs(dictionary): of search components 
+        laptop_data(df): dataframe 
 
 
-def UserDisplay(UserCompany, UserTypeName, UserInches, UserResolution, UserCpu, UserRam, UserMemory, UserGpu, UserOpSys, UserWeight, UserPrice):
-    '''This will display what the user inputs '''
-    print(f"Company desired: {UserCompany}")
+    returns: 
+        specs_laptops(list): list of laptop objects 
 
-    print(f"Type: {UserTypeName}")
-
-    print(f"Inches: {UserInches}")
-
-    print(f"Screen Resolution: {UserResolution}")
-
-    print(f"Cpu: {UserCpu}")
-
-    print(f"Ram: {UserRam}")
-
-    print(f"Storage Memory: {UserMemory}")
-
-    print(f"Gpu: {UserGpu}")
-
-    print(f"Operating system: {UserOpSys}")
-
-    print(f"Laptop Weight: {UserWeight}")
-
-    print(f"Price Range: {UserPrice}")
-
-
-def matches(specs, laptop_data):
-    '''This function will check if at least two or more components are matching the users desires.
-
-    returns: matching laptops
-            "There are no matching laptops
     '''
-    output = []
-    spec_count = 0
 
-    for row in laptop_data:
-        for column in row:
-            if column in specs:
+    specs_laptops = []
+    for row in laptop_data.iterrows():
+        spec_count = 0
+        for spec in specs:
+            match = False
+            if spec == "Price":
+                Price = specs[spec]
+                if row[1]["Price"] > Price - 200 and row[1]["Price"] < Price + 200:
+                    match = True
+
+            if specs[spec] == row[1][spec]:
+                match = True
+            if match:
                 spec_count += 1
-    if spec_count >= 2:
-        laptop = Laptop(row[0], row[1], row[2], row[3], row[4],
-                        row[5], row[6], row[7], row[8], row[9], row[10], row[11])
+                if spec_count >= 2:
+                    object = Laptop(row[1]["ID"], row[1]["Company"], row[1]["TypeName"], row[1]["Inches"], row[1]["ScreenResolution"], row[1]["Cpu"],
+                                    row[1]["Ram"], row[1]["Memory"], row[1]["Gpu"], row[1]["OpSys"], row[1]["Weight"], row[1]["Price"])
+                    specs_laptops.append(object)
+                    break
 
-        # need to make sure Laptop objects are correctly created.
-        # need to write the list of Laptop objects to a Txt file.
-
-    return output
-
-
-def parse_args(args_list):
-    pass
+    return specs_laptops
 
 
-def main(filename, laptop_data):
+def main(filename):  # Brady & Carlos
     '''
     openes and reads into the laptop_data file 
     '''
     laptop_data = pd.read_csv(filename)
-    # df = pd.read_csv(filename)
-    print(laptop_data)
+    searchBy = SearchOption()
+    if searchBy in ['Price', 'price']:
+        price = get_price_range()
+        filter_data = price_loop(laptop_data, price)
+    elif searchBy in ["Specs", 'specs']:
+        specs = userDesires(laptop_data)
+        filter_data = specs_filter(specs, laptop_data)
+
+    order = price_option()
+    sorted_data = price_display(filter_data, order)
+    #sorted_data = price_display_option(filter_data)
+
+    write_to_file(sorted_data)
 
 
 if __name__ == "__main__":
-    # userDesires()
-    #args = parse_args(sys.argv[1:])
-    # main(args.filename)
-    pass
+    main('laptop_data.csv')
