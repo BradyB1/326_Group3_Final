@@ -78,7 +78,7 @@ def get_price_range():  # Matthews
     return Price
 
 
-def price_loop(laptop_data, Price):  # Brady
+def price_loop(laptop_data, Price):  # Brady and luis
     '''This method find all the laptops within the given price range, creates objects of those laptops, and appends them to a list.
 
     args: 
@@ -354,7 +354,6 @@ def main(filename):  # Brady & Carlos
 
     order = price_option()
     sorted_data = price_display(filter_data, order)
-    #sorted_data = price_display_option(filter_data)
 
     write_to_file(sorted_data)
 
